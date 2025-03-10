@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Summarizer</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Page Summarizer</h1>
+    <button id="summarize">Summarize This Page</button>
+    <div id="loading" class="hidden">
+      <div class="spinner"></div>
+      <p>Generating summary...</p>
+    </div>
+    <div id="summary-container" class="hidden">
+      <h2>Summary</h2>
+      <div id="summary-text"></div>
+    </div>
+    <div id="error-container" class="hidden">
+      <p id="error-message"></p>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html> 
