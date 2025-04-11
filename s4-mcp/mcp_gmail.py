@@ -12,6 +12,7 @@ from mcp.server.fastmcp import FastMCP
 from mcp.types import TextContent
 from mcp.server.fastmcp.prompts import base
 import html
+import aiohttp
 
 # If modifying these SCOPES, delete the file token.json.
 SCOPES = ['https://www.googleapis.com/auth/gmail.modify']
@@ -297,8 +298,44 @@ async def show_unread_emails(max_emails: int = 5) -> dict:
             ]
         }
 
+async def call_gemini_api(prompt: str) -> dict:
+    """
+    Call the Gemini API to generate email subject and message based on a prompt.
+    
+    Args:
+        prompt: The prompt to send to the Gemini API for content generation.
+    
+    Returns:
+        A dictionary containing the generated subject and message.
+    """
+    api_url = "https://api.gemini.com/generate"  # Replace with the actual Gemini API endpoint
+    api_key = os.getenv("GEMINI_API_KEY")  # Read the API key from the .env file
+    headers = {
+        "Authorization": f"Bearer {api_key}",  # Use the API key from the environment variable
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "prompt": prompt,
+        "max_tokens": 100  # Adjust based on your needs
+    }
+
+    async with aiohttp.ClientSession() as session:
+        async with session.post(api_url, json=payload, headers=headers) as response:
+            if response.status == 200:
+                data = await response.json()
+                return {
+                    "subject": data.get("subject", "Default Subject"),
+                    "message": data.get("message", "Default message content.")
+                }
+            else:
+                # Handle errors or unexpected responses
+                return {
+                    "subject": "Error generating subject",
+                    "message": "Error generating message from Gemini API."
+                }
+
 @mcp.tool()
-async def send_gmail(recipient: str, subject: str, message: str) -> dict:
+async def send_gmail(recipient: str = None, subject: str = None, message: str = None) -> dict:
     """
     Send an email through Gmail
     
@@ -310,7 +347,15 @@ async def send_gmail(recipient: str, subject: str, message: str) -> dict:
     Returns:
         A dictionary indicating success or failure
     """
+    recipient = "amit.kayal@gmail.com"
     try:
+        # Check if subject or message is None and generate them using Gemini API
+        if not subject or not message:
+            prompt = "Generate a suitable email subject and message for the recipient."
+            generated_content = await call_gemini_api(prompt)  # Assuming this function exists
+            subject = generated_content.get('subject', 'Default Subject')  # Fallback to a default subject
+            message = generated_content.get('message', 'Default message content.')  # Fallback to a default message
+        
         success = send_email_from_mcp(recipient, subject, message)
         
         if success:
@@ -418,6 +463,67 @@ def send_email_from_mcp(recipient_email, subject, message_body):
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
+
+# @mcp.tool()
+# async def send_email_to_gmail(recipient_email: str, subject: str, body: str) -> dict:
+#     """
+#     Connect to Gmail and send an email to the specified recipient
+    
+#     Args:
+#         recipient_email: Email address of the recipient
+#         subject: Subject line of the email
+#         body: Main content/body of the email
+    
+#     Returns:
+#         A dictionary indicating success or failure with appropriate message
+#     """
+#     try:
+#         # Get Gmail service (handles authentication)
+#         service = get_gmail_service()
+        
+#         # Create the email message
+#         email_message = create_message('me', recipient_email, subject, body)
+        
+#         # Send the email
+#         result = send_message(service, 'me', email_message)
+        
+#         if result:
+#             return {
+#                 "content": [
+#                     TextContent(
+#                         type="text",
+#                         text=f"✅ Email successfully sent to {recipient_email}\n"
+#                              f"Subject: {subject}\n"
+#                              f"Message ID: {result['id']}"
+#                     )
+#                 ]
+#             }
+#         else:
+#             return {
+#                 "content": [
+#                     TextContent(
+#                         type="text",
+#                         text=f"❌ Failed to send email to {recipient_email}. The email service returned an error."
+#                     )
+#                 ]
+#             }
+#     except Exception as e:
+#         error_message = str(e)
+        
+#         # Provide more helpful error messages for common issues
+#         if "credentials.json" in error_message:
+#             error_message += "\n\nMake sure you have a valid credentials.json file in the current directory."
+#         elif "invalid_grant" in error_message:
+#             error_message += "\n\nYour authentication has expired. Delete token.json and run again to re-authenticate."
+        
+#         return {
+#             "content": [
+#                 TextContent(
+#                     type="text",
+#                     text=f"❌ Error sending email: {error_message}"
+#                 )
+#             ]
+#         }
 
 if __name__ == "__main__":
     # Check if running with mcp dev command

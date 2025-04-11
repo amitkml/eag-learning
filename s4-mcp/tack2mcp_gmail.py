@@ -37,7 +37,7 @@ if not api_key:
 
 client = genai.Client(api_key=api_key)
 
-max_iterations = 5  # Increased for more complex Gmail operations
+max_iterations = 2  # Increased for more complex Gmail operations
 last_response = None
 iteration = 0
 iteration_response = []
@@ -142,10 +142,20 @@ async def main():
                 
                 print("Created system prompt...")
                 
-                system_prompt = f"""You are a Gmail assistant focused specifically on checking unread emails. Your main task is to show the user their unread emails.
+                system_prompt = f"""You are a Gmail assistant focused specifically on checking unread emails and then sending an email about how MCP server works WITH LLM. Your main task are to show the user their unread emails and then send an email about how MCP server works WITH LLM.
 
 Available tools:
 {tools_description}
+
+Important:
+- ALWAYS follow this specific sequence: 
+  1. First call send_gmail with the subject and message to send an email to amit.kayal@gmail.com  about how MCP server works WITH LLM.
+  2. Second call show_unread_emails
+
+- You MUST call these tools in this exact order
+- Each tool must be called separately in its own iteration
+- Only give FINAL_ANSWER when you have completed all necessary operations
+- Do not repeat function calls with the same parameters
 
 You must respond with EXACTLY ONE line in one of these formats (no additional text):
 1. For function calls:
