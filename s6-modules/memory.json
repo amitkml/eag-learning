@@ -1,0 +1,82 @@
+{
+  "recipes": [
+    {
+      "name": "Simple Tomato Salad",
+      "ingredients": [
+        "Tomato",
+        "Olive oil",
+        "Salt",
+        "Pepper",
+        "Fresh basil"
+      ],
+      "missing_ingredients": [
+        "Olive oil",
+        "Salt",
+        "Pepper",
+        "Fresh basil"
+      ],
+      "preparation_time": "10 minutes",
+      "difficulty": "Easy",
+      "estimated_calories": 150,
+      "suitability_score": null,
+      "timestamp": "2025-04-15T16:41:47.599580"
+    },
+    {
+      "name": "Tomato Bruschetta",
+      "ingredients": [
+        "Tomato",
+        "Baguette or any crusty bread",
+        "Garlic",
+        "Olive oil",
+        "Salt",
+        "Fresh basil"
+      ],
+      "missing_ingredients": [
+        "Baguette or any crusty bread",
+        "Garlic",
+        "Olive oil",
+        "Salt",
+        "Fresh basil"
+      ],
+      "preparation_time": "15 minutes",
+      "difficulty": "Medium",
+      "estimated_calories": 200,
+      "suitability_score": null,
+      "timestamp": "2025-04-15T16:41:47.619582"
+    },
+    {
+      "name": "Tomato Soup",
+      "ingredients": [
+        "Tomato",
+        "Onion",
+        "Garlic",
+        "Vegetable broth",
+        "Salt",
+        "Pepper",
+        "Olive oil",
+        "Cream (optional)"
+      ],
+      "missing_ingredients": [
+        "Onion",
+        "Garlic",
+        "Vegetable broth",
+        "Salt",
+        "Pepper",
+        "Olive oil",
+        "Cream (optional)"
+      ],
+      "preparation_time": "30 minutes",
+      "difficulty": "Medium",
+      "estimated_calories": 250,
+      "suitability_score": null,
+      "timestamp": "2025-04-15T16:41:47.634679"
+    },
+    {
+      "error": "cannot access local variable 'json' where it is not associated with a value",
+      "message": "Failed to execute adjust_recipe. Please try again with different parameters.",
+      "timestamp": "2025-04-15T17:13:03.787789"
+    }
+  ],
+  "user_preferences": {},
+  "ingredients": [
+    

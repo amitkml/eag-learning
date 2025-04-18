@@ -7,3 +7,4 @@ s4-mcp/token.json
 s4-mcp/OLD_credentials.json
 s5-agent_cot/uv.lock
 s5-agent_cot/.env
+s6-modules/.env
